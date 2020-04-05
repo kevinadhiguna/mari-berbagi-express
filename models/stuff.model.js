@@ -6,13 +6,16 @@ const Stuff = new Schema({
     name: { type: String },
     description: { type: String },
     picture: { type: String },
-    status: { type: String },
+    status: {
+        type: String,
+        enum: ['New', 'Former']
+    },
     amount: { type: String },
     condition: { type: String },
     address: { type: String },
     is_cod: { type: Boolean },
     postal_fee: { type: String },
-    user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+    owner_id: { type: Schema.Types.ObjectId, ref: 'User' },
     timestamps: true
 });
 

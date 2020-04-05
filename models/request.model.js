@@ -13,7 +13,7 @@ const Request = new Schema({
         type: String,
         enum: ['Paid', 'Not yet paid', 'Waiting', 'Rejected']
     },
-    user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+    requestor_id: { type: Schema.Types.ObjectId, ref: 'User' },
     stuff_id: { type: Schema.Types.ObjectId, ref: 'Stuff' },
     timestamps: true
 });
