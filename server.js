@@ -1,34 +1,44 @@
-const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const PORT = 4000;
-const userRoutes = express.Router();
+var express = require("express");
+var log = require('morgan')('dev');
+var bodyParser = require("body-parser");
 
-const User = require("./models/user.model");
+var properties = require("./config/properties");
+var db = require("./config/database");
 
-app.use(cors());
-app.use(bodyParser.json());
-mongoose.connect("mongodb://127.0.0.1:27017/mari-berbagi", {
-  useNewUrlParser: true,
+var userRoutes = require("./api/user/user.routes");
+var app = express();
+
+//configure bodyparser
+var bodyParserJSON = bodyParser.json();
+var bodyParserURLEncoded = bodyParser.urlencoded({extended:true});
+
+//initialise express router
+var router = express.Router();
+
+// call the database connectivity function
+db();
+
+// configure app.use()
+app.use(log);
+app.use(bodyParserJSON);
+app.use(bodyParserURLEncoded);
+
+// Error handling
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization"
+  );
+  next();
 });
 
-app.use("/user", userRoutes);
-userRoutes.route("/").get(function (req, res) {
-  User.find(function (err, users) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(users);
-    }
-  });
-});
+// use express router
+app.use('/api',router);
+userRoutes(router);
 
-const connection = mongoose.connection;
-connection.once("open", function () {
-  console.log("MongoDB database connection established successfully");
-});
-app.listen(PORT, function () {
-  console.log("Server is running on Port: " + PORT);
+app.listen(properties.PORT, (req, res) => {
+  console.log(`Server is running on ${properties.PORT} port.`);
 });
