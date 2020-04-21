@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const ProfileSchema = new Schema({
@@ -36,4 +37,15 @@ const UserSchema = new Schema({
   profile: [ProfileSchema],
 });
 
-module.exports =  UserSchema;
+UserSchema.pre('save', function (next) {
+  let user = this;
+  bcrypt.hash(user.password, 10, function (err, hash) {
+    if (err) {
+      return next(err);
+    }
+    user.password = hash;
+    next();
+  })
+});
+
+module.exports = UserSchema;
