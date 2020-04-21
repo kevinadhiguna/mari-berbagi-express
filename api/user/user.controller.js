@@ -1,22 +1,28 @@
 const User = require("./user.dao");
 
 exports.createUser = (req, res, next) => {
-  let user = {
-    username: req.body.name,
-    password: req.body.description,
-  };
+  if (
+    req.body.username &&
+    req.body.password &&
+    req.body.passwordConf
+  ) {
+    let user = {
+      username: req.body.username,
+      password: req.body.password,
+    };
 
-  User.create(user, (err, user) => {
-    if (err) {
-      res.json({
-        error: err,
-      });
-    } else {
-      res.json({
-        message: "User created successfully",
-      });
-    }
-  });
+    User.create(user, (err, user) => {
+      if (err) {
+        res.json({
+          error: err,
+        });
+      } else {
+        res.json({
+          message: "User created successfully",
+        });
+      }
+    });
+  }
 };
 
 exports.getUsers = (req, res, next) => {
