@@ -39,7 +39,7 @@ exports.getUsers = (req, res, next) => {
   User.get({}, (err, users) => {
     if (!err) {
       res.json({
-        User: User,
+        User: users,
       });
     } else {
       res.json({
