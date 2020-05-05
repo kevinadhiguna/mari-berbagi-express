@@ -1,6 +1,15 @@
 const User = require("./user.dao");
 
 exports.createUser = (req, res, next) => {
+  if (req.body.password !== req.body.passwordConf) {
+    let err = new Error('Passwords do not match.');
+    err.status = 400;
+    res.json({
+      error: err,
+    });
+    return next(err);
+  }
+
   if (
     req.body.username &&
     req.body.password &&
@@ -12,13 +21,14 @@ exports.createUser = (req, res, next) => {
     };
 
     User.create(user, (err, user) => {
-      if (err) {
+      if (!err) {
         res.json({
-          error: err,
+          message: `User with ${user.username} created successfully`,
         });
       } else {
+        err.status = 400;
         res.json({
-          message: "User created successfully",
+          error: err,
         });
       }
     });
@@ -27,13 +37,13 @@ exports.createUser = (req, res, next) => {
 
 exports.getUsers = (req, res, next) => {
   User.get({}, (err, users) => {
-    if (err) {
+    if (!err) {
       res.json({
-        error: err,
+        User: User,
       });
     } else {
       res.json({
-        User: User,
+        error: err,
       });
     }
   });
@@ -41,13 +51,13 @@ exports.getUsers = (req, res, next) => {
 
 exports.getUser = (req, res, next) => {
   User.get({ id: req.params.id }, (err, users) => {
-    if (err) {
+    if (!err) {
       res.json({
-        error: err,
+        User: User,
       });
     } else {
       res.json({
-        User: User,
+        error: err,
       });
     }
   });
