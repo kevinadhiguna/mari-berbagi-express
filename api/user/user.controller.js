@@ -67,12 +67,12 @@ exports.getUser = (req, res, next) => {
   });
 };
 
-exports.updateUser = function (req, res, next) {
+exports.updateUser = (req, res, next) => {
   let user = {
     name: req.body.name,
     description: req.body.description,
   };
-  User.update({ _id: req.params.id }, user, function (err, user) {
+  User.update({ _id: req.params.id }, user, (err, user) => {
     if (err) {
       res.status(400).json({
         error: err,
