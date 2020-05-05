@@ -50,7 +50,7 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => {
-  User.get({ id: req.params.id }, (err, users) => {
+  User.get({ _id: req.params.id }, (err, user) => {
     if (!err) {
       res.json({
         User: User,
