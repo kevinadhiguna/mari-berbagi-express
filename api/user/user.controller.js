@@ -1,6 +1,12 @@
 const User = require("./user.dao");
+const { validationResult } = require('express-validator');
 
 exports.createUser = (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() })
+  }
+
   if (req.body.password !== req.body.passwordConf) {
     let err = new Error('Passwords do not match.');
     err.status = 400;
@@ -53,7 +59,7 @@ exports.getUser = (req, res, next) => {
   User.get({ _id: req.params.id }, (err, user) => {
     if (!err) {
       res.json({
-        User: User,
+        User: user,
       });
     } else {
       res.json({

@@ -1,7 +1,6 @@
 const express = require("express");
 const log = require('morgan')('dev');
 const bodyParser = require("body-parser");
-const expressValidator = require('express-validator')
 
 const properties = require("./config/properties");
 const db = require("./config/database");
@@ -23,7 +22,6 @@ db();
 app.use(log);
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
-app.use(expressValidator())
 
 // Error handling
 app.use(function (req, res, next) {
