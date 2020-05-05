@@ -1,20 +1,20 @@
-var express = require("express");
-var log = require('morgan')('dev');
-var bodyParser = require("body-parser");
+const express = require("express");
+const log = require('morgan')('dev');
+const bodyParser = require("body-parser");
 const expressValidator = require('express-validator')
 
-var properties = require("./config/properties");
-var db = require("./config/database");
+const properties = require("./config/properties");
+const db = require("./config/database");
 
-var userRoutes = require("./api/user/user.routes");
-var app = express();
+const userRoutes = require("./api/user/user.routes");
+const app = express();
 
 //configure bodyparser
-var bodyParserJSON = bodyParser.json();
-var bodyParserURLEncoded = bodyParser.urlencoded({extended:true});
+const bodyParserJSON = bodyParser.json();
+const bodyParserURLEncoded = bodyParser.urlencoded({extended:true});
 
 //initialise express router
-var router = express.Router();
+const router = express.Router();
 
 // call the database connectivity function
 db();
