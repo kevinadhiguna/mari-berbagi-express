@@ -9,8 +9,7 @@ exports.createUser = (req, res, next) => {
 
   if (req.body.password !== req.body.passwordConf) {
     let err = new Error('Passwords do not match.');
-    err.status = 400;
-    res.json({
+    res.status(400).json({
       error: err,
     });
     return next(err);
@@ -32,8 +31,7 @@ exports.createUser = (req, res, next) => {
           message: `User with ${user.username} created successfully`,
         });
       } else {
-        err.status = 400;
-        res.json({
+        res.status(400).json({
           error: err,
         });
       }
@@ -48,7 +46,7 @@ exports.getUsers = (req, res, next) => {
         User: users,
       });
     } else {
-      res.json({
+      res.status(400).json({
         error: err,
       });
     }
@@ -62,7 +60,7 @@ exports.getUser = (req, res, next) => {
         User: user,
       });
     } else {
-      res.json({
+      res.status(400).json({
         error: err,
       });
     }
@@ -76,7 +74,7 @@ exports.updateUser = function (req, res, next) {
   };
   User.update({ _id: req.params.id }, user, function (err, user) {
     if (err) {
-      res.json({
+      res.status(400).json({
         error: err,
       });
     }
