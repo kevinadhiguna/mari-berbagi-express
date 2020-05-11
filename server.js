@@ -1,32 +1,44 @@
-const express = require('express');
+const express = require("express");
+const log = require('morgan')('dev');
+const bodyParser = require("body-parser");
+
+const properties = require("./config/properties");
+const db = require("./config/database");
+
+const userRoutes = require("./api/user/user.routes");
 const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const PORT = 4000;
-const userRoutes = express.Router();
 
-const User = require('./models/user.model');
+//configure bodyparser
+const bodyParserJSON = bodyParser.json();
+const bodyParserURLEncoded = bodyParser.urlencoded({extended:true});
 
-app.use(cors());
-app.use(bodyParser.json());
-mongoose.connect('mongodb://127.0.0.1:27017/mari-berbagi', { useNewUrlParser: true });
+//initialise express router
+const router = express.Router();
 
-app.use('/user', userRoutes);
-userRoutes.route('/').get(function(req, res) {
-    User.find(function(err, users) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(users);
-        }
-    });
+// call the database connectivity function
+db();
+
+// configure app.use()
+app.use(log);
+app.use(bodyParserJSON);
+app.use(bodyParserURLEncoded);
+
+// Error handling
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization"
+  );
+  next();
 });
 
-const connection = mongoose.connection;
-connection.once('open', function() {
-    console.log("MongoDB database connection established successfully");
-})
-app.listen(PORT, function() {
-    console.log("Server is running on Port: " + PORT);
+// use express router
+app.use('/api',router);
+userRoutes(router);
+
+app.listen(properties.PORT, (req, res) => {
+  console.log(`Server is running on ${properties.PORT} port.`);
 });
